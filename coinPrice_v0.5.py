@@ -11,8 +11,15 @@ from PyQt5.QtCore import *
 from_class = uic.loadUiType("ui/coinPriceUi.ui")[0]
 
 class CoinViewThread(QThread):
+    coinDataSent = pyqtSignal(float, float, float, float, float, float, float, float)
+
     def __init__(self):
         super().__init__()
+        self.ticker = "BTC"
+        self.alive = True
+
+    def run(self):
+        self.coinDataSent()
 
 
 class MainWindow(QMainWindow, from_class):
