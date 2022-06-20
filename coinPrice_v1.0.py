@@ -114,7 +114,6 @@ class MainWindow(QMainWindow, from_class):
         self.cvt.start()  # 쓰레드 클래스의 run()를 호출(함수시작)
 
 
-
     # 쓰레드 클래스에서 보내준 데이터를 받아주는 슬롯 함수
     def fillCoinData(self, trade_price, signed_change_rate, acc_trade_volume_24h,
                      acc_trade_price_24h, trade_volume, high_price, low_price, prev_closing_price):
