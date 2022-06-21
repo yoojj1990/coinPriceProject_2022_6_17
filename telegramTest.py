@@ -19,3 +19,4 @@ def handler(updata, context):
         telegram_bot.send_message(chat_id=chat_id, text="2가 입력되었습니다")
 
 echo_handler = MessageHandler(Filters.text, handler)
+dispather.add_handler(echo_handler)
