@@ -127,10 +127,10 @@ class MainWindow(QMainWindow, from_class):
         cion_ticker = self.coin_comboBox.currentText()  # 콤보박스에서 선택된 티커 불러오기
         self.ticker = cion_ticker  # 맴버변수인 티커의 값을 콤보박스에서 선택된 티커로 변경
         self.coinTicker_label.setText(cion_ticker)  # 콤보박스에서 선택된 티커로 코인 레이블을 셋팅
-        print(cion_ticker)
-        self.alarm_price1.setText('')
-        self.alarm_price2.setText('')
-        self.alarmButton.setText('알람시작')
+
+        self.alarm_price1.setText('')  # 코인 종류 변경시 입력된 매도 가격 초기화
+        self.alarm_price2.setText('')  # 코인 종류 변경시 입력된 매수 가격 초기화
+        self.alarmButton.setText('알람시작')  # 버튼 토글 상태 변경
         self.alarmButton.setStyleSheet("background-color:skyblue;")
 
 
@@ -197,24 +197,34 @@ class MainWindow(QMainWindow, from_class):
 
                     if trade_price >= alarm_price1:
                         print("팔라는 알람울림")
+                        self.telegram_message(f"{self.ticker}의 현재가격 {trade_price:,.0f}이 알람설정하신 가격인 {alarm_price1}원을 초과하였습니다")
                         self.alarmFlag = 1
 
                     if trade_price <= alarm_price2:
                         print("사라는 알람울림")
+                        self.telegram_message(f"{self.ticker}의 현재가격 {trade_price:,.0f}이 알람설정하신 가격인 {alarm_price2}원보다 하락하였습니다")
                         self.alarmFlag = 1
         else:
             pass
 
+    def telegram_message(self, message):
+        telegram_call = TelegramBotClass(self)
+        telegram_call.telegramBot(message)
+
 
 class TelegramBotClass(QThread):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.parent = parent
 
-        with open("token/telegramToken.txt") as f:
-            lines = f.readline()
-            token = lines[0].strip()
+        # with open("token/telegramToken.txt") as f:
+        #     lines = f.readline()
+        #     token = lines[0].strip()
+
+        token = ""  # 사용자의 텔레그램 토큰 입력
 
         self.bot = telegram.Bot(token=token)
+
 
     def telegramBot(self, text):
         try:
